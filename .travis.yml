@@ -1,0 +1,20 @@
+sudo: required
+services: 
+  - docker
+# Before running tests
+before_install:
+  - docker build -t littlebrownie/react-test -f Dockerfile.dev .
+# When travis wants to run tests
+script:
+  - docker run -e CI=true littlebrownie/react-test npm run test
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "dockerr"
+  env: "Dockerr-env"
+  bucket_name: "elasticbeanstalk-us-east-1-399850910445"
+  bucket_path: "dockerr"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
